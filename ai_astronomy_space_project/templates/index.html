@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI in Astronomy and Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="hero">
+    <h1>Eight planets, sorted by distance from the Sun</h1>
+    <p>AI helps telescopes find new worlds, sort galaxies and steer spacecraft.
+       Here is our own neighbourhood, ranked the way a mission planner would see it.</p>
+  </header>
+
+  <main>
+    <form class="controls" method="get">
+      <label>Sort by
+        <select name="sort">
+          {% for o in options %}
+          <option value="{{ o }}" {{ 'selected' if o == sort_key }}>{{ o|capitalize }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Order
+        <select name="order">
+          <option value="asc" {{ 'selected' if not reverse }}>Low to high</option>
+          <option value="desc" {{ 'selected' if reverse }}>High to low</option>
+        </select>
+      </label>
+      <button type="submit">Apply sort</button>
+    </form>
+
+    <section class="cards" aria-label="Planet cards">
+      {{ cards }}
+    </section>
+
+    <section class="factbox" aria-labelledby="fact-title">
+      <h2 id="fact-title">How AI helps telescopes</h2>
+
+      <figure class="curve">
+        <svg viewBox="0 0 {{ curve.width }} {{ curve.height }}" role="img"
+             aria-label="Simulated star brightness with two dips where a planet passes in front">
+          <polyline points="{{ curve.points }}" />
+          {% for x, y in curve.dips %}
+          <circle cx="{{ x }}" cy="{{ y }}" r="2.6" />
+          {% endfor %}
+        </svg>
+        <figcaption>Simulated star brightness over time. Red dots mark where a simple
+          detector sees a dip that could be a planet.</figcaption>
+      </figure>
+
+      <div class="facts">
+        {% for f in facts %}
+        <div>
+          <h3>{{ f.title }}</h3>
+          <p>{{ f.text }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+
+  <footer>Distances are averages. Moon counts as confirmed in 2025 and may change as new moons are found.</footer>
+</body>
+</html>
